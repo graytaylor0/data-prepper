@@ -31,7 +31,7 @@ dependencies {
     implementation "org.bouncycastle:bcprov-jdk15on:1.69"
     implementation "org.bouncycastle:bcpkix-jdk15on:1.69"
     testImplementation 'org.assertj:assertj-core:3.20.2'
-    testImplementation "org.mockito:mockito-inline:3.11.2"
+    testImplementation "org.mockito:mockito-inline:3.12.4"
     testImplementation "org.hamcrest:hamcrest:2.2"
     testImplementation(platform('org.junit:junit-bom:5.7.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
