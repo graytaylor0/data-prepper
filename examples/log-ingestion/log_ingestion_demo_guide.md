@@ -1,5 +1,6 @@
 # Data Prepper Log Ingestion Demo Guide
 
+<<<<<<< HEAD
 This is a guide that will walk users through setting up a sample Data Prepper for log ingestion. 
 This guide will go through the steps required to create a simple log ingestion pipeline from \
 Fluent Bit → Data Prepper → OpenSearch. This log ingestion flow is shown in the diagram below.
