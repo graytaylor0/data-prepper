@@ -15,6 +15,8 @@ import com.amazon.dataprepper.model.configuration.PluginModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import io.micrometer.core.instrument.util.StringUtils;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,6 +32,8 @@ public class HTTPSourceConfig {
     static final int DEFAULT_MAX_CONNECTION_COUNT = 500;
     static final int DEFAULT_MAX_PENDING_REQUESTS = 1024;
 
+    @Max(65535)
+    @Min(0)
     @JsonProperty("port")
     private int port = DEFAULT_PORT;
 

@@ -10,6 +10,10 @@ dependencies {
     implementation "com.linecorp.armeria:armeria:1.9.2"
     implementation "commons-io:commons-io:2.11.0"
     testImplementation project(':data-prepper-api').sourceSets.test.output
+    implementation "javax.validation:validation-api:2.0.1.Final"
+    implementation "org.hibernate.validator:hibernate-validator:7.0.1.Final"
+    implementation "org.hibernate.validator:hibernate-validator-cdi:7.0.1.Final"
+    implementation "org.glassfish:jakarta.el:4.0.0"
     testImplementation 'org.assertj:assertj-core:3.20.2'
     testImplementation "org.hamcrest:hamcrest:2.2"
 }
