@@ -48,7 +48,6 @@ public class AggregateProcessor extends AbstractProcessor<Record<Event>, Record<
 
     private final AggregateProcessorConfig aggregateProcessorConfig;
     private final AggregateAction aggregateAction;
-    private final PluginMetrics pluginMetrics;
     private static volatile MapDbPrepperState<Event> currentWindow;
     private static final Map<Object, Object> groupState = Maps.newConcurrentMap();
     private static Clock clock;
@@ -62,7 +61,6 @@ public class AggregateProcessor extends AbstractProcessor<Record<Event>, Record<
         super(pluginMetrics);
         aggregateProcessorConfig.validate();
         this.aggregateProcessorConfig = aggregateProcessorConfig;
-        this.pluginMetrics = pluginMetrics;
         this.processorId = processorsCreated.getAndIncrement();
         aggregateAction = getAggregateAction(pluginFactory);
         clock = Clock.systemUTC();
