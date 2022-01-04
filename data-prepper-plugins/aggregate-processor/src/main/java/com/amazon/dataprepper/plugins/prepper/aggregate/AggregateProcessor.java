@@ -15,6 +15,7 @@ import com.amazon.dataprepper.metrics.PluginMetrics;
 import com.amazon.dataprepper.model.annotations.DataPrepperPlugin;
 import com.amazon.dataprepper.model.annotations.DataPrepperPluginConstructor;
 import com.amazon.dataprepper.model.annotations.SingleThread;
+import com.amazon.dataprepper.model.configuration.PipelineDescription;
 import com.amazon.dataprepper.model.configuration.PluginModel;
 import com.amazon.dataprepper.model.configuration.PluginSetting;
 import com.amazon.dataprepper.model.event.Event;
@@ -53,15 +54,16 @@ public class AggregateProcessor extends AbstractProcessor<Record<Event>, Record<
     private static Clock clock;
     private static long lastConcludedGroupTimestamp;
     private final int processorId;
-    private static final int numProcessWorkers = 2;
+    private final int numProcessWorkers;
     private static CyclicBarrier allThreadsCyclicBarrier;
 
     @DataPrepperPluginConstructor
-    public AggregateProcessor(final AggregateProcessorConfig aggregateProcessorConfig, final PluginMetrics pluginMetrics, final PluginFactory pluginFactory) {
+    public AggregateProcessor(final AggregateProcessorConfig aggregateProcessorConfig, final PluginMetrics pluginMetrics, final PluginFactory pluginFactory, final PipelineDescription pipelineDescription) {
         super(pluginMetrics);
         aggregateProcessorConfig.validate();
         this.aggregateProcessorConfig = aggregateProcessorConfig;
         this.processorId = processorsCreated.getAndIncrement();
+        this.numProcessWorkers = pipelineDescription.getNumProcessWorkers();
         aggregateAction = getAggregateAction(pluginFactory);
         clock = Clock.systemUTC();
 

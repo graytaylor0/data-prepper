@@ -6,10 +6,12 @@
 package com.amazon.dataprepper.plugin;
 
 import com.amazon.dataprepper.model.annotations.DataPrepperPlugin;
+import com.amazon.dataprepper.model.configuration.PipelineDescription;
 import com.amazon.dataprepper.model.configuration.PluginSetting;
 import com.amazon.dataprepper.model.plugin.NoPluginFoundException;
 import com.amazon.dataprepper.model.plugin.PluginFactory;
 
+import java.nio.channels.Pipe;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -93,7 +95,7 @@ public class DefaultPluginFactory implements PluginFactory {
 
         final Class<?> pluginConfigurationType = pluginAnnotation.pluginConfigurationType();
         final Object configuration = pluginConfigurationConverter.convert(pluginConfigurationType, pluginSetting);
-
+        final PipelineDescription pipelineDescription = new PipelineDescription();
         return new PluginArgumentsContext.Builder()
                 .withPluginSetting(pluginSetting)
                 .withPluginConfiguration(configuration)
