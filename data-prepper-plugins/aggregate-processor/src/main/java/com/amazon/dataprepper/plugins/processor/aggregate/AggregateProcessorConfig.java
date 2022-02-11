@@ -6,6 +6,7 @@
 package com.amazon.dataprepper.plugins.processor.aggregate;
 
 import com.amazon.dataprepper.model.configuration.PluginModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -38,5 +39,4 @@ public class AggregateProcessorConfig {
     }
 
     public PluginModel getAggregateAction() { return aggregateAction; }
-
 }
