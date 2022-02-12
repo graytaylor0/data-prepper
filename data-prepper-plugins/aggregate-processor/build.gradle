@@ -12,6 +12,8 @@ dependencies {
     implementation project(':data-prepper-plugins:common')
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'io.micrometer:micrometer-core'
+    implementation 'com.googlecode.thread-weaver:threadweaver:0.1'
+    implementation 'org.testng:testng:6.8'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation "org.mockito:mockito-inline:${versionMap.mockito}"
     testImplementation 'com.google.code.tempus-fugit:tempus-fugit:1.1'
