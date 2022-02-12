@@ -9,6 +9,7 @@ import com.amazon.dataprepper.model.configuration.PluginModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.opensearch.dataprepper.logstash.exception.LogstashMappingException;
+import org.opensearch.dataprepper.logstash.model.LogstashAttribute;
 import org.opensearch.dataprepper.logstash.model.LogstashPlugin;
 
 import java.io.IOException;
