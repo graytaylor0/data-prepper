@@ -4,8 +4,10 @@ receivers:
       grpc:
 
 exporters:
-  otlp/2:
-    endpoint: data-prepper:21890
+  otlphttp/2:
+    endpoint: http://data-prepper:21890
+    cert_file: "/etc/certfile.crt"
+    key_file: "/etc/keyfile.key"
     insecure: true
   logging:
 
@@ -13,4 +15,4 @@ service:
   pipelines:
     traces:
       receivers: [jaeger]
-      exporters: [logging, otlp/2]
+      exporters: [logging, otlphttp/2]
