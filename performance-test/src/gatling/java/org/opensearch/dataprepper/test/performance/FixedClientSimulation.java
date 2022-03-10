@@ -14,17 +14,29 @@ import org.opensearch.dataprepper.test.performance.tools.Protocol;
 import java.time.Duration;
 
 public class FixedClientSimulation extends Simulation {
-    private static final Integer largeBatchSize = 200;
+    private static final Integer largeBatchSize = 2;
     private static final Integer users = 10;
     private static final Duration duration = Duration.ofMinutes(5);
+    private static final String LOG_FILE_PATH = System.getProperty("logFile", null);
 
-    ScenarioBuilder fixedScenario = CoreDsl.scenario("Slow Burn")
+    ScenarioBuilder fixedScenario = CoreDsl.scenario("Fixed Client")
             .during(duration)
             .on(Chain.sendApacheCommonLogPostRequest("Post logs with large batch", largeBatchSize));
 
+    ScenarioBuilder logFileScenario = CoreDsl.scenario("Fixed Client")
+            .during(duration)
+            .on(Chain.sendCustomFileLogsPostRequest("Post logs with large batch", largeBatchSize, LOG_FILE_PATH));
+
     {
-        setUp(fixedScenario.injectOpen(CoreDsl.atOnceUsers(users)))
-                .protocols(Protocol.httpProtocol())
-                .assertions(CoreDsl.global().requestsPerSec().gt(140.0));
+        System.out.println(LOG_FILE_PATH);
+        if (LOG_FILE_PATH == null) {
+            setUp(fixedScenario.injectOpen(CoreDsl.atOnceUsers(users)))
+                    .protocols(Protocol.httpProtocol())
+                    .assertions(CoreDsl.global().requestsPerSec().gt(140.0));
+        } else {
+            setUp(logFileScenario.injectOpen(CoreDsl.atOnceUsers(users)))
+                    .protocols(Protocol.httpProtocol())
+                    .assertions(CoreDsl.global().requestsPerSec().gt(140.0));
+        }
     }
 }

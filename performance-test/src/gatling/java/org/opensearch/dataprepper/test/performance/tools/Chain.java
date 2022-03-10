@@ -23,4 +23,11 @@ public final class Chain {
                         .post("/log/ingest")
                         .body(CoreDsl.StringBody(Templates.apacheCommonLogTemplate(batchSize))));
     }
+
+    public static ChainBuilder sendCustomFileLogsPostRequest(final String name, final int batchSize, final String logFilePath) {
+        return CoreDsl.exec(
+                HttpDsl.http(name)
+                        .post("/log/ingest")
+                        .body(CoreDsl.StringBody(Templates.customFileTemplate(batchSize, logFilePath))));
+    }
 }

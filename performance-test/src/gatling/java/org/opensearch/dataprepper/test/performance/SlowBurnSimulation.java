@@ -18,8 +18,13 @@ public class SlowBurnSimulation extends Simulation {
     private static final Integer rampUsers = 60;
     private static final Duration rampUpTime = Duration.ofMinutes(60);
     private static final Duration peakDuration = Duration.ofMinutes(5);
+    private static final String LOG_FILE_PATH = System.getProperty("logFile", null);
 
     ScenarioBuilder rampUpScenario = CoreDsl.scenario("Slow Burn")
+            .forever()
+            .on(Chain.sendApacheCommonLogPostRequest("Post logs with large batch", largeBatchSize));
+
+    ScenarioBuilder rampUpWithCustomFileScenario = CoreDsl.scenario("Slow Burn")
             .forever()
             .on(Chain.sendApacheCommonLogPostRequest("Post logs with large batch", largeBatchSize));
 
