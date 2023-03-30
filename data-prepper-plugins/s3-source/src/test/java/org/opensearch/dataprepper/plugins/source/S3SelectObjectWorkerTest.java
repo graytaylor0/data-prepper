@@ -115,9 +115,7 @@ class S3SelectObjectWorkerTest {
         when(s3ObjectReference.getBucketName()).thenReturn(bucketName);
         when(s3ObjectReference.getKey()).thenReturn(key);
         when(s3SourceConfig.getS3SelectOptions()).thenReturn(s3SelectOptions);
-        when(s3SourceConfig.getS3SelectOptions().getExpression()).thenReturn(expression);
-        final S3SelectCSVOption csvOption = new S3SelectCSVOption();
-        ReflectivelySetField.setField(S3SelectCSVOption.class,csvOption,"fileHeaderInfo","none");
+        when(s3SourceConfig.getS3SelectOptions().getExpression()).thenReturn(queryStatement);
         S3ObjectRequest request = new S3ObjectRequest.Builder(buffer,numberOfRecordsToAccumulate,
                 bufferTimeout,s3ObjectPluginMetrics)
                 .expression(expression).eventConsumer(eventConsumer)

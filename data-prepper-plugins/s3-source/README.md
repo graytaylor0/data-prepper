@@ -54,15 +54,8 @@ source-pipeline:
       compression: none
       s3_select:
         expression: "select * from s3object s LIMIT 10000"
-        expression_type: SQL
         input_serialization: csv
-        compression_type: none
-        csv: 
-          file_header_info: use
-          quote_escape: 
-          comments: 
-        json:
-          type: document
+        csv_file_header: use
       sqs:
         queue_url: "https://sqs.us-east-1.amazonaws.com/123456789012/MyQueue"
       aws:
@@ -78,23 +71,9 @@ All Duration values are a string that represents a duration. They support ISO_86
 
 * `expression` (Required if s3_select enabled) : Provide s3 select query to process the data using S3 select for the particular bucket.
 
-* `expression_type` (Optional if s3_select enabled) : Provide s3 select query type to process the data using S3 select for the particular bucket.
-
-* `compression_type` (Optional if s3_select enabled) : The compression algorithm to apply. May be one of: `none`, `gzip`. Defaults to `none`.
-
 * `input_serialization` (Required if s3_select enabled) : Provide the s3 select file format (csv/json/Apache Parquet) Amazon S3 uses this format to parse object data into records and returns only records that match the specified SQL expression. You must also specify the data serialization format for the response.
 
-* `csv` (Optional) : Provide the csv configuration to process the csv data.
-
-* `file_header_info` (Required if csv block is enabled) : Provide CSV Header example : `use` , `none` , `ignore`. Default is `use`.
-
-* `quote_escape` (Optional) : Provide quote_escape attribute example : `,` , `.`.
-
-* `comments` (Optional) : Provide comments attribute example : `#`. Default is `#`.
-
-* `json` (Optional) : Provide the json configuration to process the json data.
-
-* `type` (Optional) : Provide the type attribute to process the json type data example: `Lines` , `Document` Default is `Document`.
+* `csv_file_header` (Optional) : Provide CSV Header example : `use` , `none` , `ignore`. Default is `use`.
 
 * `notification_type` : Must be `sqs`.
 
