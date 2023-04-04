@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package org.opensearch.dataprepper.model.source;
+package org.opensearch.dataprepper.model.source.coordinator;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,30 +17,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class SourcePartitionTest {
 
     @Test
-    void sourcePartitionBuilderWithNullPartitionThrowsNullPointerException() {
+    void sourcePartitionBWithNullPartitionKeyThrowsNullPointerException() {
 
         assertThrows(NullPointerException.class, () -> {
-            SourcePartition.builder(String.class)
-                    .withPartition(null)
-                    .withPartitionState(UUID.randomUUID().toString())
-                    .build();
+            new SourcePartition<>(null, UUID.randomUUID().toString());
         });
     }
 
     @Test
     void sourcePartitionBuilder_returns_expected_SourcePartition() {
         final String partitionKey = UUID.randomUUID().toString();
-        final PartitionIdentifier partitionIdentifier = PartitionIdentifier.builder().withPartitionKey(partitionKey).build();
         final String partitionState = UUID.randomUUID().toString();
 
-        final SourcePartition sourcePartition = SourcePartition.builder(String.class)
-                .withPartition(partitionIdentifier)
-                .withPartitionState(partitionState)
-                .build();
+        final SourcePartition<String> sourcePartition = new SourcePartition<>(partitionKey, partitionState);
 
         assertThat(sourcePartition, notNullValue());
-        assertThat(sourcePartition.getPartition(), equalTo(partitionIdentifier));
-        assertThat(sourcePartition.getPartition().getPartitionKey(), equalTo(partitionKey));
+        assertThat(sourcePartition.getPartitionKey(), equalTo(partitionKey));
         assertThat(sourcePartition.getPartitionState(), equalTo(partitionState));
     }
 }

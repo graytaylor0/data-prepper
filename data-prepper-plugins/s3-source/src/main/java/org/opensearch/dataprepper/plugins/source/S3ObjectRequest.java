@@ -7,6 +7,7 @@ package org.opensearch.dataprepper.plugins.source;
 import org.opensearch.dataprepper.model.buffer.Buffer;
 import org.opensearch.dataprepper.model.event.Event;
 import org.opensearch.dataprepper.model.record.Record;
+import org.opensearch.dataprepper.model.source.coordinator.SourceCoordinator;
 import org.opensearch.dataprepper.plugins.source.codec.Codec;
 import org.opensearch.dataprepper.plugins.source.compression.CompressionEngine;
 import org.opensearch.dataprepper.plugins.source.configuration.S3SelectSerializationFormatOption;
@@ -34,6 +35,7 @@ public class S3ObjectRequest {
     private final S3Client s3Client;
     private final CompressionType compressionType;
     private final FileHeaderInfo fileHeaderInfo;
+
     private S3ObjectRequest(Builder builder) {
         this.buffer = builder.buffer;
         this.numberOfRecordsToAccumulate =builder.numberOfRecordsToAccumulate;

@@ -15,6 +15,8 @@ import org.opensearch.dataprepper.model.event.Event;
 import org.opensearch.dataprepper.model.plugin.PluginFactory;
 import org.opensearch.dataprepper.model.record.Record;
 import org.opensearch.dataprepper.model.source.Source;
+import org.opensearch.dataprepper.model.source.coordinator.SourceCoordinator;
+import org.opensearch.dataprepper.model.source.coordinator.UsesSourceCoordination;
 import org.opensearch.dataprepper.plugins.source.codec.Codec;
 import org.opensearch.dataprepper.plugins.source.ownership.BucketOwnerProvider;
 import org.opensearch.dataprepper.plugins.source.ownership.ConfigBucketOwnerProviderFactory;
@@ -26,12 +28,13 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @DataPrepperPlugin(name = "s3", pluginType = Source.class, pluginConfigurationType = S3SourceConfig.class)
-public class S3Source implements Source<Record<Event>> {
+public class S3Source implements Source<Record<Event>>, UsesSourceCoordination {
 
     private final PluginMetrics pluginMetrics;
     private final S3SourceConfig s3SourceConfig;
     private SqsService sqsService;
     private final PluginFactory pluginFactory;
+    private SourceCoordinator<?> sourceCoordinator;
 
     @DataPrepperPluginConstructor
     public S3Source(PluginMetrics pluginMetrics, final S3SourceConfig s3SourceConfig, final PluginFactory pluginFactory) {
@@ -75,7 +78,7 @@ public class S3Source implements Source<Record<Event>> {
                     .compressionEngine(s3SourceConfig.getCompression().getEngine()).build();
             s3Handler = new S3ObjectWorker(s3ObjectRequest);
         }
-        final S3Service s3Service = new S3Service(s3Handler);
+        final S3Service s3Service = new S3Service(s3Handler, sourceCoordinator, s3ClientBuilderFactory.getS3Client());
         sqsService = new SqsService(s3SourceConfig, s3Service, pluginMetrics);
 
         sqsService.start();
@@ -84,5 +87,15 @@ public class S3Source implements Source<Record<Event>> {
     @Override
     public void stop() {
         sqsService.stop();
+    }
+
+    @Override
+    public <T> void setSourceCoordinator(final SourceCoordinator<T> sourceCoordinator) {
+        this.sourceCoordinator = sourceCoordinator;
+    }
+
+    @Override
+    public Class<?> getPartitionProgressStateClass() {
+        return String.class;
     }
 }

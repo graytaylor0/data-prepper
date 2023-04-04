@@ -26,6 +26,8 @@ public class DynamoStoreSettings {
     private Long provisionedReadCapacityUnits = DEFAULT_PROVISIONED_READ_CAPACITY_UNITS;
     private Long provisionedWriteCapacityUnits = DEFAULT_PROVISIONED_WRITE_CAPACITY_UNITS;
 
+    private Class<?> partitionClass;
+
     @JsonCreator
     public DynamoStoreSettings(@JsonProperty("table_name") final String tableName,
                                @JsonProperty("region") final String region,

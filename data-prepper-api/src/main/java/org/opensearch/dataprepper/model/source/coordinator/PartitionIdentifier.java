@@ -14,7 +14,7 @@ import java.util.Objects;
  * @since 2.2
  */
 public class PartitionIdentifier {
-    private final java.lang.String partitionKey;
+    private final String partitionKey;
 
     private PartitionIdentifier(final PartitionIdentifier.Builder builder) {
         Objects.requireNonNull(builder.partitionKey);
@@ -22,7 +22,7 @@ public class PartitionIdentifier {
         this.partitionKey = builder.partitionKey;
     }
 
-    public java.lang.String getPartitionKey() {
+    public String getPartitionKey() {
         return partitionKey;
     }
 
@@ -32,9 +32,9 @@ public class PartitionIdentifier {
 
     public static class Builder {
 
-        private java.lang.String partitionKey;
+        private String partitionKey;
 
-        public PartitionIdentifier.Builder withPartitionKey(final java.lang.String partitionKey) {
+        public PartitionIdentifier.Builder withPartitionKey(final String partitionKey) {
             this.partitionKey = partitionKey;
             return this;
         }

@@ -11,6 +11,10 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 
 import java.time.Instant;
 
+public interface StorePartitionItem {
+
+}
+
 @DynamoDbBean
 public class DynamoDbSourcePartitionItem {
 

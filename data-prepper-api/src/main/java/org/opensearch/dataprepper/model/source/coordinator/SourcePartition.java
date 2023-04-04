@@ -15,49 +15,20 @@ import java.util.Objects;
  */
 public class SourcePartition<T> {
 
-    private final PartitionIdentifier partitionKey;
+    private final String partitionKey;
     private final T partitionState;
 
-    private SourcePartition(final Builder<T> builder) {
-        Objects.requireNonNull(builder.partitionKey);
-
-        this.partitionKey = builder.partitionKey;
-        this.partitionState = builder.partitionState;
+    public SourcePartition(final String partitionKey, final T partitionState) {
+        Objects.requireNonNull(partitionKey);
+        this.partitionKey = partitionKey;
+        this.partitionState = partitionState;
     }
 
-    public PartitionIdentifier getPartition() {
+    public String getPartitionKey() {
         return partitionKey;
     }
 
     public T getPartitionState() {
         return partitionState;
-    }
-
-    public static <T> Builder<T> builder(Class<T> clazz) {
-        return new Builder<>(clazz);
-    }
-
-    public static class Builder<T> {
-
-        private PartitionIdentifier partitionKey;
-        private T partitionState;
-
-        public Builder(Class<T> clazz) {
-
-        }
-
-        public Builder<T> withPartitionKey(final PartitionIdentifier partitionKey) {
-            this.partitionKey = partitionKey;
-            return this;
-        }
-
-        public Builder<T> withPartitionState(final T partitionState) {
-            this.partitionState = partitionState;
-            return this;
-        }
-
-        public SourcePartition<T> build() {
-            return new SourcePartition<T>(this);
-        }
     }
 }

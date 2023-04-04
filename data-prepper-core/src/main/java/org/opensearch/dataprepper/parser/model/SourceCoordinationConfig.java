@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.opensearch.dataprepper.model.configuration.PluginModel;
 import org.opensearch.dataprepper.model.configuration.PluginSetting;
-import org.opensearch.dataprepper.model.source.UsesSourceCoordination;
 
 import java.util.Objects;
 
@@ -27,7 +26,9 @@ public class SourceCoordinationConfig {
     public SourceCoordinationConfig(@JsonProperty("store") final PluginModel sourceCoordinationStoreConfig) {
         Objects.requireNonNull(sourceCoordinationStoreConfig, "source_coordination store must not be null");
 
-        this.sourceCoordinationStoreConfig = new PluginSetting(sourceCoordinationStoreConfig.getPluginName(), sourceCoordinationStoreConfig.getPluginSettings());
+        final String fullPluginName = sourceCoordinationStoreConfig.getPluginName() + "-" + SOURCE_COORDINATOR_METRIC_PREFIX;
+
+        this.sourceCoordinationStoreConfig = new PluginSetting(fullPluginName, sourceCoordinationStoreConfig.getPluginSettings());
         this.sourceCoordinationStoreConfig.setPipelineName(SOURCE_COORDINATOR_METRIC_PREFIX);
     }
 
