@@ -60,7 +60,11 @@ public class S3Source implements Source<Record<Event>> {
         final BiConsumer<Event, S3ObjectReference> eventMetadataModifier = new EventMetadataModifier(
                 s3SourceConfig.getMetadataRootKey());
         if (s3SelectOptional.isPresent()) {
-            S3ObjectRequest s3ObjectRequest = s3ObjectRequestBuilder.queryStatement(s3SelectOptional.get().getExpression())
+            S3SelectCSVOption csvOption = (s3SelectOptional.get().getS3SelectCSVOption() != null) ?
+                    s3SelectOptional.get().getS3SelectCSVOption() : new S3SelectCSVOption();
+            S3SelectJsonOption jsonOption = (s3SelectOptional.get().getS3SelectJsonOption() != null) ?
+                    s3SelectOptional.get().getS3SelectJsonOption() : new S3SelectJsonOption();
+            S3ObjectRequest s3ObjectRequest = s3ObjectRequestBuilder.expression(s3SelectOptional.get().getExpression())
                     .serializationFormatOption(s3SelectOptional.get().getS3SelectSerializationFormatOption())
                     .s3AsyncClient(s3ClientBuilderFactory.getS3AsyncClient()).eventConsumer(eventMetadataModifier).
                     s3SelectCSVOption(csvOption).s3SelectJsonOption(jsonOption)

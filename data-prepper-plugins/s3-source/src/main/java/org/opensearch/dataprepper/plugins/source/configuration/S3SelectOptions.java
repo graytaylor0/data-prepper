@@ -37,6 +37,14 @@ public class S3SelectOptions {
 	public S3SelectSerializationFormatOption getS3SelectSerializationFormatOption() {
 		return s3SelectSerializationFormatOption;
 	}
+
+	public S3SelectCSVOption getS3SelectCSVOption() {
+		return s3SelectCSVOption;
+	}
+
+	public S3SelectJsonOption getS3SelectJsonOption() {
+		return s3SelectJsonOption;
+	}
 	
 	public String getCsvFileHeaderInfo() {
 		return csvFileHeaderInfo;
