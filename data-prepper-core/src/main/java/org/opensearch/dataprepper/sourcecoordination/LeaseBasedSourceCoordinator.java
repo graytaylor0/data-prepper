@@ -69,15 +69,14 @@ public class LeaseBasedSourceCoordinator<T> implements SourceCoordinator<T> {
             return partitionManager.getActivePartition();
         }
 
-        Optional<SourcePartitionStoreItem> ownedPartitions = sourceCoordinationStore.tryAcquireAvailablePartition();
+        Optional<SourcePartitionStoreItem> ownedPartitions = sourceCoordinationStore.tryAcquireAvailablePartition(ownerId, DEFAULT_LEASE_TIMEOUT);
 
         if (ownedPartitions.isEmpty()) {
-            // Potential metric (AcquirePartitionMisses). May indicate that the number of nodes could be lowered or new partitions need to be added
             LOG.info("Partition owner {} did not acquire any partitions. Running partition creation supplier to create more partitions", ownerId);
 
             createPartitions(partitionsCreatorSupplier.get());
 
-            ownedPartitions = sourceCoordinationStore.tryAcquireAvailablePartition();
+            ownedPartitions = sourceCoordinationStore.tryAcquireAvailablePartition(ownerId, DEFAULT_LEASE_TIMEOUT);
         }
 
         if (ownedPartitions.isEmpty()) {

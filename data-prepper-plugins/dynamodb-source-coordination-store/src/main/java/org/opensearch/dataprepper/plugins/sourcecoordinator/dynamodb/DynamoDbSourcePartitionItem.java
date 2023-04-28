@@ -80,6 +80,7 @@ public class DynamoDbSourcePartitionItem implements SourcePartitionStoreItem {
         this.partitionProgressState = partitionProgressState;
     }
 
+    // TODO: Make this a global secondary index to improve performance (can be optional setting on the store)
     public void setSourcePartitionStatus(final SourcePartitionStatus sourcePartitionStatus) {
         this.sourcePartitionStatus = sourcePartitionStatus;
     }
