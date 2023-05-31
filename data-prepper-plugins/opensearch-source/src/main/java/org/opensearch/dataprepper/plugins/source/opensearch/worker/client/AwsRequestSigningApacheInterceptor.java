@@ -10,7 +10,7 @@
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package org.opensearch.dataprepper.plugins.sink.opensearch;
+package org.opensearch.dataprepper.plugins.source.opensearch.worker.client;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntityEnclosingRequest;
