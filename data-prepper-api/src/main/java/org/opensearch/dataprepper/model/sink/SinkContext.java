@@ -14,10 +14,12 @@ import java.util.Collection;
 public class SinkContext {
     private final String tagsTargetKey;
     private final Collection<String> routes;
+    private final Collection<String> excludeKeys;
 
-    public SinkContext(final String tagsTargetKey, final Collection<String> routes) {
+    public SinkContext(final String tagsTargetKey, final Collection<String> routes, final Collection<String> excludeKeys) {
         this.tagsTargetKey = tagsTargetKey;
         this.routes = routes;
+        this.excludeKeys = excludeKeys;
     }
     
     /**
@@ -35,5 +37,10 @@ public class SinkContext {
     public Collection<String> getRoutes() {
         return routes;
     }
+
+    /**
+     * returns a List of keys to remove from the Event before sending to the sink
+     */
+    public Collection<String> getExcludeKeys() { return excludeKeys; }
 }
 

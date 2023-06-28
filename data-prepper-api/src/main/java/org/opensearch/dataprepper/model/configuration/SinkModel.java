@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents an extension of the {@link PluginModel} which is specific to Sink
@@ -28,8 +29,12 @@ import java.util.Map;
 @JsonDeserialize(using = SinkModel.SinkModelDeserializer.class)
 public class SinkModel extends PluginModel {
 
-    SinkModel(final String pluginName, final List<String> routes, final String tagsTargetKey, final Map<String, Object> pluginSettings) {
-        this(pluginName, new SinkInternalJsonModel(routes, tagsTargetKey, pluginSettings));
+    SinkModel(final String pluginName,
+              final List<String> routes,
+              final String tagsTargetKey,
+              final Map<String, Object> pluginSettings,
+              final List<String> excludeKeys) {
+        this(pluginName, new SinkInternalJsonModel(routes, tagsTargetKey, pluginSettings, excludeKeys));
     }
 
     private SinkModel(final String pluginName, final SinkInternalJsonModel sinkInnerModel) {
@@ -47,6 +52,13 @@ public class SinkModel extends PluginModel {
     }
 
     /**
+     * Gets the list of keys to exclude from the Event before sending to the sink
+     * return The List of keys to exclude
+     * @since 2.4
+     */
+    public Collection<String> getExcludedKeys() { return this.<SinkInternalJsonModel>getInternalJsonModel().excludeKeys; }
+
+    /**
      * Gets the tags target key associated with this Sink.
      *
      * @return The tags target key
@@ -61,15 +73,17 @@ public class SinkModel extends PluginModel {
         private final PluginModel pluginModel;
         private final List<String> routes;
         private final String tagsTargetKey;
+        private final List<String> excludeKeys;
 
         private SinkModelBuilder(final PluginModel pluginModel) {
             this.pluginModel = pluginModel;
             this.routes = Collections.emptyList();
             this.tagsTargetKey = null;
+            this.excludeKeys = null;
         }
 
         public SinkModel build() {
-            return new SinkModel(pluginModel.getPluginName(), routes, tagsTargetKey, pluginModel.getPluginSettings());
+            return new SinkModel(pluginModel.getPluginName(), routes, tagsTargetKey, pluginModel.getPluginSettings(), excludeKeys);
         }
     }
 
@@ -86,23 +100,34 @@ public class SinkModel extends PluginModel {
         @JsonProperty("tags_target_key")
         private final String tagsTargetKey;
 
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
+        @JsonProperty("exclude_keys")
+        private final List<String> excludeKeys;
+
         @JsonCreator
-        private SinkInternalJsonModel(@JsonProperty("routes") final List<String> routes, @JsonProperty("tags_target_key") final String tagsTargetKey) {
+        private SinkInternalJsonModel(@JsonProperty("routes") final List<String> routes,
+                                      @JsonProperty("tags_target_key") final String tagsTargetKey,
+                                      @JsonProperty("exclude_keys") final List<String> excludeKeys) {
             super();
             this.routes = routes != null ? routes : new ArrayList<>();
             this.tagsTargetKey = tagsTargetKey;
+            this.excludeKeys = Objects.nonNull(excludeKeys) ? excludeKeys : new ArrayList<>();
         }
 
-        private SinkInternalJsonModel(final List<String> routes, final String tagsTargetKey, final Map<String, Object> pluginSettings) {
+        private SinkInternalJsonModel(final List<String> routes,
+                                      final String tagsTargetKey,
+                                      final Map<String, Object> pluginSettings,
+                                      final List<String> excludeKeys) {
             super(pluginSettings);
             this.routes = routes != null ? routes : new ArrayList<>();
             this.tagsTargetKey = tagsTargetKey;
+            this.excludeKeys = Objects.nonNull(excludeKeys) ? excludeKeys : new ArrayList<>();
         }
     }
 
     static class SinkModelDeserializer extends AbstractPluginModelDeserializer<SinkModel, SinkInternalJsonModel> {
         SinkModelDeserializer() {
-            super(SinkModel.class, SinkInternalJsonModel.class, SinkModel::new, () -> new SinkInternalJsonModel(null, null));
+            super(SinkModel.class, SinkInternalJsonModel.class, SinkModel::new, () -> new SinkInternalJsonModel(null, null, null));
         }
     }
 }

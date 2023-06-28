@@ -231,9 +231,7 @@ public class OpenSearchSink extends AbstractSink<Record<Event>> {
 
     for (final Record<Event> record : records) {
       final Event event = record.getData();
-      final SerializedJson document = getDocument(event);
-      final Optional<String> docId = document.getDocumentId();
-      final Optional<String> routing = document.getRoutingField();
+
       String indexName = configuredIndexAlias;
       try {
           indexName = indexManager.getIndexName(event.formatString(indexName));
@@ -249,6 +247,10 @@ public class OpenSearchSink extends AbstractSink<Record<Event>> {
                   .build()), e);
           continue;
       }
+
+      final SerializedJson document = getDocument(event);
+      final Optional<String> docId = document.getDocumentId();
+      final Optional<String> routing = document.getRoutingField();
 
       BulkOperation bulkOperation;
 
@@ -306,6 +308,8 @@ public class OpenSearchSink extends AbstractSink<Record<Event>> {
   private SerializedJson getDocument(final Event event) {
     String docId = (documentIdField != null) ? event.get(documentIdField, String.class) : null;
     String routing = (routingField != null) ? event.get(routingField, String.class) : null;
+
+    excludeKeysFromEvent(event);
 
     final String document = DocumentBuilder.build(event, documentRootKey, Objects.nonNull(sinkContext)?sinkContext.getTagsTargetKey():null);
 
@@ -398,5 +402,11 @@ public class OpenSearchSink extends AbstractSink<Record<Event>> {
   public void shutdown() {
     super.shutdown();
     closeFiles();
+  }
+
+  private void excludeKeysFromEvent(final Event event) {
+    if (Objects.nonNull(sinkContext)) {
+      sinkContext.getExcludeKeys().forEach(event::delete);
+    }
   }
 }

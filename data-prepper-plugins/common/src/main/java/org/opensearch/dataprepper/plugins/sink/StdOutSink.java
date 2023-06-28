@@ -6,6 +6,7 @@
 package org.opensearch.dataprepper.plugins.sink;
 
 import org.opensearch.dataprepper.model.annotations.DataPrepperPlugin;
+import org.opensearch.dataprepper.model.annotations.DataPrepperPluginConstructor;
 import org.opensearch.dataprepper.model.configuration.PluginSetting;
 import org.opensearch.dataprepper.model.event.Event;
 import org.opensearch.dataprepper.model.event.EventHandle;
@@ -19,6 +20,7 @@ import java.util.Objects;
 @DataPrepperPlugin(name = "stdout", pluginType = Sink.class)
 public class StdOutSink implements Sink<Record<Object>> {
     private final String tagsTargetKey;
+    private SinkContext sinkContext;
 
     /**
      * Mandatory constructor for Data Prepper Component - This constructor is used by Data Prepper
@@ -28,8 +30,10 @@ public class StdOutSink implements Sink<Record<Object>> {
      *
      * @param pluginSetting instance with metadata information from pipeline pluginSetting file.
      */
+    @DataPrepperPluginConstructor
     public StdOutSink(final PluginSetting pluginSetting, final SinkContext sinkContext) {
         this(Objects.nonNull(sinkContext) ? sinkContext.getTagsTargetKey() : null);
+        this.sinkContext = sinkContext;
     }
 
     public StdOutSink(final String tagsTargetKey) {
@@ -50,6 +54,7 @@ public class StdOutSink implements Sink<Record<Object>> {
     // TODO: This function should be removed with the completion of: https://github.com/opensearch-project/data-prepper/issues/546
     private void checkTypeAndPrintObject(final Object object) {
         if (object instanceof Event) {
+            excludeKeysFromEvent((Event) object);
             String output = ((Event)object).jsonBuilder().includeTags(tagsTargetKey).toJsonString();
             System.out.println(output);
             EventHandle eventHandle = ((Event)object).getEventHandle();
@@ -72,5 +77,11 @@ public class StdOutSink implements Sink<Record<Object>> {
     @Override
     public boolean isReady() {
         return true;
+    }
+
+    private void excludeKeysFromEvent(final Event event) {
+        if (Objects.nonNull(sinkContext)) {
+            sinkContext.getExcludeKeys().forEach(event::delete);
+        }
     }
 }

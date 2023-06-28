@@ -76,7 +76,7 @@ class SinkModelTest {
         pluginSettings.put("key1", "value1");
         pluginSettings.put("key2", "value2");
         final String tagsTargetKey = "tags";
-        final SinkModel sinkModel = new SinkModel("customSinkPlugin", Arrays.asList("routeA", "routeB"), tagsTargetKey, pluginSettings);
+        final SinkModel sinkModel = new SinkModel("customSinkPlugin", Arrays.asList("routeA", "routeB"), tagsTargetKey, pluginSettings, Arrays.asList("keyA", "keyB"));
 
         final String actualJson = objectMapper.writeValueAsString(sinkModel);
 
@@ -127,7 +127,7 @@ class SinkModelTest {
         pluginSettings.put("key1", "value1");
         pluginSettings.put("key2", "value2");
         pluginSettings.put("key3", "value3");
-        final SinkModel sinkModel = new SinkModel("customPlugin", null, null, pluginSettings);
+        final SinkModel sinkModel = new SinkModel("customPlugin", null, null, pluginSettings, null);
 
         final String actualJson = objectMapper.writeValueAsString(sinkModel);
 
