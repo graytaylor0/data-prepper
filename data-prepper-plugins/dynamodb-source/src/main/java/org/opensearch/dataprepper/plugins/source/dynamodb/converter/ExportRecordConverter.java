@@ -6,6 +6,8 @@
 package org.opensearch.dataprepper.plugins.source.dynamodb.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.ion.IonObjectMapper;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.DistributionSummary;
@@ -25,6 +27,9 @@ import java.util.Map;
 public class ExportRecordConverter extends RecordConverter {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExportRecordConverter.class);
+
+    private static final ObjectMapper CONVERSION_MAPPER = new ObjectMapper()
+            .registerModule(new SimpleModule().addDeserializer(Map.class, new ExportRecordDeserializer()));
 
     private static final String ITEM_KEY = "Item";
     static final Duration VERSION_OVERLAP_TIME_FOR_EXPORT = Duration.ofMinutes(5);
@@ -60,8 +65,10 @@ public class ExportRecordConverter extends RecordConverter {
 
     private Map<String, Object> convertToMap(String jsonData) {
         try {
-            return MAPPER.readValue(jsonData, Map.class);
+            final Map<String, Object> ionMap = (Map<String, Object>) MAPPER.readValue(jsonData, Map.class).get(ITEM_KEY);
+            return CONVERSION_MAPPER.convertValue(ionMap, Map.class);
         } catch (JsonProcessingException e) {
+            LOG.error("Unable to deserialize export item: {}", e.getMessage());
             return null;
         }
     }
@@ -79,7 +86,7 @@ public class ExportRecordConverter extends RecordConverter {
         for (String line : lines) {
             final long bytes = line.getBytes().length;
             bytesReceivedSummary.record(bytes);
-            Map data = (Map<String, Object>) convertToMap(line).get(ITEM_KEY);
+            final Map<String, Object> data = convertToMap(line);
             try {
                 // The version number is the export time minus some overlap to ensure new stream events still get priority
                 final long eventVersionNumber = (exportStartTime - VERSION_OVERLAP_TIME_FOR_EXPORT.toMillis()) * 1_000;
