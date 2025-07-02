@@ -197,7 +197,7 @@ public class ExistingDocumentQueryManager implements Runnable {
                     m.searches(s -> s
                             .header(h -> h.index(index))
                             .body(b -> b
-                                    .size(chunk.size())
+                                    .size(chunk.size() * 2)
                                     .source(source -> source.filter(f -> f.includes(queryTerm)))
                                     .query(Query.of(q -> q
                                             .terms(TermsQuery.of(t -> t
