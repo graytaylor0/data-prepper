@@ -111,11 +111,11 @@ public class DataFileScheduler implements Runnable {
             runLoader.whenComplete(completeDataLoader(dataFilePartition));
         } else {
             runLoader.whenComplete((v, ex) -> {
+                numOfWorkers.decrementAndGet();
                 if (ex != null) {
                     LOG.error("There was an exception while processing an S3 data file: {}", ex);
                     coordinator.giveUpPartition(dataFilePartition);
                 }
-                numOfWorkers.decrementAndGet();
             });
         }
         numOfWorkers.incrementAndGet();
